@@ -52,7 +52,7 @@ var PaneSwitcher = Base.extend({
   }
 
 , afterRender: function () {
-    $(window).off('resize', this.resizeAndOffset);
+    $(window).off('resize orientationchange', this.resizeAndOffset);
 
     // Pane Switchers should always have overflow hidden on them
     // no matter what the target element is
@@ -84,7 +84,7 @@ var PaneSwitcher = Base.extend({
 
     this.$el.append(this.$holder);
 
-    $(window).on('resize', this.resizeAndOffset);
+    $(window).on('resize orientationchange', this.resizeAndOffset);
 
     this.resize();
   }
