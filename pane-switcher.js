@@ -9,7 +9,8 @@ var Base = require('ribcage-view')
 
 var PaneSwitcher = Base.extend({
 
-  afterInit: function () {
+  afterInit: function (opts) {
+    this.options = opts;
 
     this.currentPane = this.options.currentPane || 0;
 
