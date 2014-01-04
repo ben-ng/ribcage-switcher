@@ -228,24 +228,38 @@ var PaneSwitcher = Base.extend({
 
 , setPane: function (num, pane) {
     var target = this['$pane'+num]
-      , innerPane = $('<div class="inner-pane"></div>');
+      , targetInnerPane = target.children(':first')
+      , innerPane;
 
     if (this['view'+num]) {
       this.detachSubview(this['view'+num]);
     }
 
-    this['view'+num] = pane;
-
-    target.append(innerPane);
-
-    if(pane) {
+    // There already is an inner pane
+    if(targetInnerPane.length) {
+      pane.setElement(targetInnerPane);
+      pane.render();
+      pane.delegateEvents();
+      this.appendSubview(pane, target);
+    }
+    // If we are re-attaching an existing pane
+    else if(pane.$el.hasClass('inner-pane')) {
+      this.appendSubview(pane, target);
+    }
+    // It is possible that the inner pane was removed
+    // with a detached view
+    else {
+      innerPane = $('<div class="inner-pane"></div>');
       pane.setElement(innerPane);
       pane.render();
-
       pane.delegateEvents();
-      pane.on('previous', bind(this.previous, this));
-      pane.on('next', bind(this.next, this));
+      this.appendSubview(pane, target);
     }
+
+    this['view'+num] = pane;
+
+    pane.on('previous', bind(this.previous, this));
+    pane.on('next', bind(this.next, this));
 
     new ScrollFix(this['$pane'+num][0]);
   }
